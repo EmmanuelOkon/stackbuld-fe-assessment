@@ -1,10 +1,8 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/static";
-import { LuChevronsUpDown, LuListFilter } from "react-icons/lu";
+import { LuListFilter } from "react-icons/lu";
 import { FiChevronDown } from "react-icons/fi";
 
 import {
@@ -15,25 +13,41 @@ import {
 import { FaArrowUp } from "react-icons/fa6";
 import { FaArrowDown } from "react-icons/fa6";
 import { CgUndo } from "react-icons/cg";
-import { cn } from "@/lib/utils";
+import { Product } from "@/interface";
 
 type SortOption = "default" | "ascending" | "descending";
 
 const ProductsPage = () => {
+  const [products, setProducts] = React.useState<Product[]>([]);
+   React.useEffect(() => {
+     const loadProducts = () => {
+       try {
+         const savedProducts = JSON.parse(
+           localStorage.getItem("products") || "[]"
+         ) as Product[];
+         console.log("Loaded products:", savedProducts); // Log the loaded products
+         setProducts(savedProducts);
+       } catch (error) {
+         console.error("Error loading products from localStorage:", error);
+         setProducts([]);
+       }
+     };
+
+     loadProducts();
+   }, []);
+
   const itemsPerPage = 15;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedCategory, setSelectedCategory] =
     React.useState("All Products");
   const [sortOption, setSortOption] = React.useState<SortOption>("default");
-  const allProducts = React.useMemo(() => products, []);
+  // const allProducts = React.useMemo(() => products, []);
 
   const sortedAndFilteredProducts = React.useMemo(() => {
     let filteredProducts =
       selectedCategory === "All Products"
-        ? allProducts
-        : allProducts.filter(
-            (product) => product.category === selectedCategory
-          );
+        ? products
+        : products.filter((product) => product.category === selectedCategory);
 
     switch (sortOption) {
       case "ascending":
@@ -43,7 +57,7 @@ const ProductsPage = () => {
       default:
         return filteredProducts;
     }
-  }, [allProducts, selectedCategory, sortOption]);
+  }, [products, selectedCategory, sortOption]);
 
   const handleSortChange = (option: SortOption) => {
     setSortOption(option);
@@ -57,8 +71,8 @@ const ProductsPage = () => {
 
   const filteredProducts =
     selectedCategory === "All Products"
-      ? allProducts
-      : allProducts.filter((product) => product.category === selectedCategory);
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
 
   const totalProducts = filteredProducts.length;
   const totalPages = Math.ceil(totalProducts / itemsPerPage);
@@ -104,7 +118,7 @@ const ProductsPage = () => {
                   <CgUndo className="w-5 h-5" />
                 </div>
 
-                <span className="text-sm">Sort by:</span>
+                <span className="text-sm">Price:</span>
                 <div
                   onClick={() => handleSortChange("ascending")}
                   className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
