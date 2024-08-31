@@ -173,7 +173,7 @@ export const products: Product[] = [
     price: 12000,
     rating: 4.2,
     vendor: "Luiz Shop",
-    imageUrl: "/assets/images/men4.webp",
+    imageUrl: "/assets/images/men4.png",
     category: "Men Clothing",
   },
   {

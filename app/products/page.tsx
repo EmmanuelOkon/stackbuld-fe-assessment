@@ -18,30 +18,36 @@ import { Product } from "@/interface";
 type SortOption = "default" | "ascending" | "descending";
 
 const ProductsPage = () => {
-  const [products, setProducts] = React.useState<Product[]>([]);
-   React.useEffect(() => {
-     const loadProducts = () => {
-       try {
-         const savedProducts = JSON.parse(
-           localStorage.getItem("products") || "[]"
-         ) as Product[];
-         console.log("Loaded products:", savedProducts); // Log the loaded products
-         setProducts(savedProducts);
-       } catch (error) {
-         console.error("Error loading products from localStorage:", error);
-         setProducts([]);
-       }
-     };
-
-     loadProducts();
-   }, []);
-
-  const itemsPerPage = 15;
+  
+   const itemsPerPage = 15;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedCategory, setSelectedCategory] =
     React.useState("All Products");
   const [sortOption, setSortOption] = React.useState<SortOption>("default");
-  // const allProducts = React.useMemo(() => products, []);
+const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
+
+
+  const [products, setProducts] = React.useState<Product[]>([]);
+  React.useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const savedProducts = JSON.parse(
+          localStorage.getItem("products") || "[]"
+        ) as Product[];
+        console.log("Loaded products:", savedProducts);
+        setProducts(savedProducts);
+      } catch (error) {
+        console.error("Error loading products from localStorage:", error);
+        setProducts([]);
+      }
+    };
+
+    loadProducts();
+    setTriggerRefresh(false)
+  }, [triggerRefresh]);
+
+ 
+  
 
   const sortedAndFilteredProducts = React.useMemo(() => {
     let filteredProducts =
@@ -58,6 +64,10 @@ const ProductsPage = () => {
         return filteredProducts;
     }
   }, [products, selectedCategory, sortOption]);
+
+  // React.useEffect(() => {
+    
+  // }, [])
 
   const handleSortChange = (option: SortOption) => {
     setSortOption(option);
@@ -101,7 +111,7 @@ const ProductsPage = () => {
           <div className="block md:flex items-center justify-between lg:px-2 py-4 border-b border-b-gray-300 ">
             <div className="w-full flex items-center gap-3 justify-between">
               <div className="text-left py-3">
-                <span className="body" >
+                <span className="body">
                   {startIndex + 1} - {endIndex} of {totalProducts} results
                 </span>
               </div>
@@ -176,13 +186,19 @@ const ProductsPage = () => {
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {sortedAndFilteredProducts
-            .slice(startIndex, endIndex)
-            .map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-        </div>
+        {!sortedAndFilteredProducts ||
+        sortedAndFilteredProducts.length === 0 ? (
+          <div className="text-center">No Products</div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {sortedAndFilteredProducts
+              .slice(startIndex, endIndex)
+              .map((product) => (
+                <ProductCard key={product.id} product={product} setTriggerRefresh={setTriggerRefresh} />
+              ))}
+          </div>
+        )}
+
         <div className="flex justify-center items-center mt-8">
           <button
             onClick={() => handlePageChange(currentPage - 1)}

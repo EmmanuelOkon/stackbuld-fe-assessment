@@ -8,6 +8,8 @@ import "@fontsource-variable/rubik";
 import "@fontsource/jomhuria";
 import "@fontsource/poppins";
 import AppContainer from "@/components/AppContainer";
+import { Toaster, toast } from "sonner";
+
 
 export const metadata: Metadata = {
   title: "Stackbuld E-commerce App",
@@ -22,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning>
+        <Toaster richColors />
         <AppContainer>{children}</AppContainer>
       </body>
     </html>

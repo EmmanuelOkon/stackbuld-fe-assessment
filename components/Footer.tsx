@@ -82,7 +82,7 @@ const Footer: React.FC = () => {
         <div className="mt-6 flex flex-col-reverse md:flex-row justify-between items-center text-sm border-t pt-4">
           <div className="">
             <p className="text-left md:text-left">
-              © 2024 Starkbuld. All Rights Reserved.
+              © 2024 Stackbuld. All Rights Reserved.
             </p>
           </div>
           <div className="flex w-full justify-between md:items-center md:gap-[5rem] md:justify-end mb-4 md:mb-0">

@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { Product } from "@/interface";
 import { Icons } from "@/public/assets/icon";
 import Image from "next/image";
@@ -16,8 +16,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
-const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
+const ProductCard: React.FC<{
+  product: Product;
+  setTriggerRefresh: (arg0: boolean) => void;
+}> = ({ product, setTriggerRefresh }) => {
+  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -28,23 +34,35 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Add your delete logic here
+    toast("One product deleted");
+    const savedProducts = JSON.parse(localStorage.getItem("products") || "[]");
+    const updatedProducts = savedProducts.filter(
+      (p: Product) => p.id !== product.id
+    );
+    localStorage.setItem("products", JSON.stringify(updatedProducts));
+
     console.log("Delete clicked for product:", product.id);
+    setIsDialogOpen(false);
+    setTriggerRefresh(true);
   };
 
   return (
     <div className="flex flex-col justify-between max-h-[437px] shadow bg-white rounded-lg body relative">
-      <div className="absolute top-2 right-2 flex space-x-1 z-20 bg-orange-600 p-2">
+      <div className="absolute top-2 right-2 flex space-x-1 z-20 p-2">
         <button
           onClick={handleEdit}
           className="p-1 bg-white text-[#333333] hover:text-blue-400 rounded-full shadow"
         >
           <BiEditAlt />
         </button>
-        <AlertDialog>
+
+        <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <AlertDialogTrigger asChild>
             <button
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsDialogOpen(true);
+              }}
               className="p-1 bg-white text-red-600 hover:text-red-900 rounded-full shadow"
             >
               <MdOutlineDeleteForever />
@@ -55,13 +73,19 @@ const ProductCard: React.FC<{ product: Product }> = ({ product }) => {
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
               <AlertDialogDescription className="text-[#100909] font-medium ">
                 This action cannot be undone. This will permanently delete{" "}
-                <span className="font-semibold text-red-700 ">{product.name}</span>
+                <span className="font-semibold text-red-700 ">
+                  {product.name}
+                </span>
                 {` `}
                 from our database.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={(e) => e.stopPropagation()}>
+              <AlertDialogCancel
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
