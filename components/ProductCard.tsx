@@ -121,35 +121,37 @@ const ProductCard: React.FC<{
           <AlertDialogContent onClick={(e) => e.stopPropagation()}>
             <AlertDialogHeader>
               <AlertDialogTitle className="py-2">Edit Product</AlertDialogTitle>
-
-              <h2 className="text-sm font-medium ">Product Name</h2>
+            </AlertDialogHeader>
+            <AlertDialogDescription className="text-[#100909] font-medium ">
+              <h2 className="text-sm font-medium py-2">Product Name</h2>
               <Input
                 value={newProductName}
                 onChange={(e) => setNewProductName(e.target.value)}
               />
-            </AlertDialogHeader>
+            </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <p>Price </p>
+              <h2 className="text-sm font-medium py-2 ">Price(₦) </h2>
               <Input
                 value={newPrice}
                 onChange={(e) => setNewPrice(Number(e.target.value))}
               />
             </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <p>Vendor </p>
+              <h2 className="text-sm font-medium py-2">Vendor </h2>
               <Input
                 value={newVendor}
                 onChange={(e) => setNewVendor(e.target.value)}
               />
             </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <p>Category </p>
+              <h2 className="text-sm font-medium py-2">Category </h2>
               <Input
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
               />
             </AlertDialogDescription>
-            <AlertDialogFooter>
+            <div className="border border-gray-200" />
+            <AlertDialogFooter className="flex-col gap-3 mt2">
               <AlertDialogCancel
                 onClick={(e) => {
                   e.stopPropagation();

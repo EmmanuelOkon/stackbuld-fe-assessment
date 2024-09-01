@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+
 import "./globals.css";
 
 import "@fontsource-variable/nunito-sans";
@@ -9,6 +10,7 @@ import "@fontsource/jomhuria";
 import "@fontsource/poppins";
 import AppContainer from "@/components/AppContainer";
 import { Toaster, toast } from "sonner";
+
 
 
 export const metadata: Metadata = {

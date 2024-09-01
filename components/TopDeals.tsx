@@ -1,9 +1,28 @@
 import React from "react";
-import { products } from "@/static";
+
 import ProductCard from "./ProductCard";
 import Link from "next/link";
+import { Product } from "@/interface";
 
 const TopDeals: React.FC = () => {
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const savedProducts = JSON.parse(
+          localStorage.getItem("products") || "[]"
+        ) as Product[];
+        setProducts(savedProducts);
+      } catch (error) {
+        console.error("Error loading products from localStorage:", error);
+        setProducts([]);
+      }
+    };
+
+    loadProducts();
+  }, [triggerRefresh]);
   const topDeals = products.filter(
     (product) => product.category === "Top Deals"
   );
@@ -19,7 +38,11 @@ const TopDeals: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {topDeals.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              setTriggerRefresh={setTriggerRefresh}
+            />
           ))}
         </div>
       </div>

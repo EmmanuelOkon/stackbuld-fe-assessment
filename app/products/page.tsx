@@ -15,17 +15,16 @@ import { FaArrowDown } from "react-icons/fa6";
 import { CgUndo } from "react-icons/cg";
 import { Product } from "@/interface";
 
+
 type SortOption = "default" | "ascending" | "descending";
 
 const ProductsPage = () => {
-  
-   const itemsPerPage = 15;
+  const itemsPerPage = 15;
   const [currentPage, setCurrentPage] = React.useState(1);
   const [selectedCategory, setSelectedCategory] =
     React.useState("All Products");
   const [sortOption, setSortOption] = React.useState<SortOption>("default");
-const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
-
+  const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
 
   const [products, setProducts] = React.useState<Product[]>([]);
   React.useEffect(() => {
@@ -43,11 +42,8 @@ const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
     };
 
     loadProducts();
-    setTriggerRefresh(false)
+    setTriggerRefresh(false);
   }, [triggerRefresh]);
-
- 
-  
 
   const sortedAndFilteredProducts = React.useMemo(() => {
     let filteredProducts =
@@ -64,10 +60,6 @@ const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
         return filteredProducts;
     }
   }, [products, selectedCategory, sortOption]);
-
-  // React.useEffect(() => {
-    
-  // }, [])
 
   const handleSortChange = (option: SortOption) => {
     setSortOption(option);
@@ -109,47 +101,49 @@ const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
         </div>
         <div className="lg:max-w-7xl 2xl:max-w-[1560px] mx-auto pb-4">
           <div className="block md:flex items-center justify-between lg:px-2 py-4 border-b border-b-gray-300 ">
-            <div className="w-full flex items-center gap-3 justify-between">
+            <div className="w-full flex justify-start items-center gap-3 flex-col md:flex-row md:justify-between">
               <div className="text-left py-3">
                 <span className="body">
                   {startIndex + 1} - {endIndex} of {totalProducts} results
                 </span>
               </div>
 
-              <div className="flex items-center gap-2 ">
-                <div
-                  onClick={() => handleSortChange("default")}
-                  className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
-                    sortOption === "default"
-                      ? "font-semibold text-blue-600"
-                      : ""
-                  }`}
-                >
-                  <CgUndo className="w-5 h-5" />
-                </div>
+              <div className="flex items-center flex-col md:flex-row gap-2 ">
+                <div className="flex items-center gap-2">
+                  <div
+                    onClick={() => handleSortChange("default")}
+                    className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
+                      sortOption === "default"
+                        ? "font-semibold text-blue-600"
+                        : ""
+                    }`}
+                  >
+                    <CgUndo className="w-5 h-5" />
+                  </div>
 
-                <span className="text-sm">Price:</span>
-                <div
-                  onClick={() => handleSortChange("ascending")}
-                  className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
-                    sortOption === "ascending"
-                      ? "font-semibold text-blue-600"
-                      : ""
-                  }`}
-                >
-                  Asc
-                  <FaArrowUp />
-                </div>
-                <div
-                  onClick={() => handleSortChange("descending")}
-                  className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
-                    sortOption === "descending"
-                      ? "font-semibold text-blue-600"
-                      : ""
-                  }`}
-                >
-                  Dsc
-                  <FaArrowDown />
+                  <span className="text-sm">Price:</span>
+                  <div
+                    onClick={() => handleSortChange("ascending")}
+                    className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
+                      sortOption === "ascending"
+                        ? "font-semibold text-blue-600"
+                        : ""
+                    }`}
+                  >
+                    Asc
+                    <FaArrowUp />
+                  </div>
+                  <div
+                    onClick={() => handleSortChange("descending")}
+                    className={`cursor-pointer flex items-center gap-2 border border-gray-200 p-2 rounded ${
+                      sortOption === "descending"
+                        ? "font-semibold text-blue-600"
+                        : ""
+                    }`}
+                  >
+                    Dsc
+                    <FaArrowDown />
+                  </div>
                 </div>
                 <div className="flex items-center gap-3 border border-gray-300 p-2 rounded-md">
                   <Popover>
@@ -194,7 +188,11 @@ const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
             {sortedAndFilteredProducts
               .slice(startIndex, endIndex)
               .map((product) => (
-                <ProductCard key={product.id} product={product} setTriggerRefresh={setTriggerRefresh} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  setTriggerRefresh={setTriggerRefresh}
+                />
               ))}
           </div>
         )}

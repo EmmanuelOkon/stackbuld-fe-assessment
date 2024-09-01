@@ -6,6 +6,14 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { FiChevronDown } from "react-icons/fi";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -26,71 +34,89 @@ const Navbar: React.FC = () => {
                   <Icons.Search />
                 </div>
 
-                <input
+                <Input
                   id="search"
-                  className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm md:w-[36vw] "
+                  className="block ring-ring-offset-0 focus- outline-0 w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-0 focus:placeholder-gray-400 focus:ring-0  sm:text-sm md:w-[36vw] "
                   placeholder="Search products, categories and brands"
                   type="search"
                 />
               </div>
             </div>
           </div>
-          <div className="hidden w-[300px] bg-red-700 sm:ml-6 sm:flex sm:items-center">
-            <div className="flex items-center gap-4">
-              {/* Notification Icon */}
-              <div className=" cursor-pointer">
+          <div className="hidden flex- max-w-[350px] bg-red700 sm:ml-6 sm:flex sm:items-center justify-between gap-3 ">
+            <div className="flex items-center gap-4 justifybetween ">
+              <div className="cursor-pointer">
                 <Icons.Bell className="w-6 h-6 text-gray-700" />
               </div>
 
-              {/* Shopping Cart Icon */}
               <div className="cursor-pointer">
                 <Icons.CartIcon className="w-6 h-6 text-gray-700" />
               </div>
 
-              {/* User Profile Icon */}
-              <div className="flex items-center cursor-pointer">
-                <Icons.ProfileIcon className="w-6 h-6 text-gray-700" />
-                <span className="ml-2 text-sm text-gray-700">Fred Onana</span>
-                <FiChevronDown className="text-[#667185] cursor-pointer w-4 h-4 md:h-6 md:w-6  " />
+              <div className="w-full flex items-center cursor-pointer bg-blue400 justify-between ">
+                <DropdownMenu>
+                  <DropdownMenuTrigger className="outline-0 bg-gray-100 p-2 rounded-full">
+                    <Icons.ProfileIcon className="w-7 h-7 text-gray-700" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuLabel>
+                      <div className="font-medium">Fred Onana</div>
+                      <div className="text-sm text-muted-foreground">
+                        fredonana@gmail.com
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem className="cursor-pointer">
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Settings
+                    </DropdownMenuItem>
+                    <DropdownMenuItem className="cursor-pointer">
+                      Logout
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
           <div className="-mr-2 flex items-center sm:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-            >
-              <Icons.Hamburger
-                className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
-              />
-              <Icons.XIcon
-                className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
-              />
-            </button>
-          </div>
-        </div>
-      </div>
+            <DropdownMenu onOpenChange={(open) => setIsMenuOpen(open)}>
+              <DropdownMenuTrigger className="outline-0 bg-gray-100 p-2 rounded-md">
+                {isMenuOpen ? (
+                  <Icons.XIcon className="h-6 w-6" />
+                ) : (
+                  <Icons.Hamburger className="h-6 w-6" />
+                )}
+              </DropdownMenuTrigger>
 
-      <div className={`${isMenuOpen ? "block" : "hidden"} sm:hidden`}>
-        <div className="pt-2 pb-3 space-y-1">
-          <a
-            href="#"
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
-          >
-            <Icons.ProfileIcon />
-          </a>
-          <a
-            href="#"
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
-          >
-            Login
-          </a>
-          <a
-            href="#"
-            className="block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent text-blue-600 hover:bg-blue-50 hover:border-blue-300"
-          >
-            Get Started
-          </a>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>
+                  <div className="font-medium">Fred Onana</div>
+                  <div className="text-sm text-muted-foreground">
+                    fredonana@gmail.com
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  Notifications
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Cart
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </nav>

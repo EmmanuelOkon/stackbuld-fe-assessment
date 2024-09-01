@@ -6,6 +6,7 @@ import { Product } from "@/interface";
 
 const MenClothing: React.FC = () => {
   const [products, setProducts] = React.useState<Product[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const loadProducts = () => {
@@ -21,7 +22,7 @@ const MenClothing: React.FC = () => {
     };
 
     loadProducts();
-  }, []);
+  }, [triggerRefresh]);
 
   const menClothing = products.filter(
     (product) => product.category === "Men Clothing"
@@ -40,7 +41,11 @@ const MenClothing: React.FC = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {menClothing.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              setTriggerRefresh={setTriggerRefresh}
+            />
           ))}
         </div>
       </div>
