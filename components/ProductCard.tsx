@@ -17,24 +17,81 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import { Input } from "./ui/input";
+
+export function editProductInLocalStorage(
+  id: number,
+  updatedFields: Partial<Product>
+): boolean {
+  try {
+    // Retrieve the current products from localStorage
+    const savedProducts: Product[] = JSON.parse(
+      localStorage.getItem("products") || "[]"
+    );
+
+    // Find the index of the product to edit
+    const productIndex = savedProducts.findIndex(
+      (product) => product.id === id
+    );
+
+    // If the product is not found, return false
+    if (productIndex === -1) {
+      console.error(`Product with id ${id} not found in localStorage`);
+      return false;
+    }
+
+    // Update the product with the new fields
+    savedProducts[productIndex] = {
+      ...savedProducts[productIndex],
+      ...updatedFields,
+    };
+
+    // Save the updated products back to localStorage
+    localStorage.setItem("products", JSON.stringify(savedProducts));
+
+    console.log(`Product with id ${id} updated successfully`);
+    return true;
+  } catch (error) {
+    console.error("Error updating product in localStorage:", error);
+    return false;
+  }
+}
 
 const ProductCard: React.FC<{
   product: Product;
   setTriggerRefresh: (arg0: boolean) => void;
 }> = ({ product, setTriggerRefresh }) => {
-  const [isDialogOpen, setIsDialogOpen] = React.useState(false);
+  const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
+  const [isEditOpen, setIsEditOpen] = React.useState(false);
+  const [newProductName, setNewProductName] = React.useState(product.name);
+  const [newPrice, setNewPrice] = React.useState(product.price);
+  const [newVendor, setNewVendor] = React.useState(product.vendor);
+  const [newCategory, setNewCategory] = React.useState(product.category);
 
   const handleEdit = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    // Add your edit logic here
+    const success = editProductInLocalStorage(product.id as number, {
+      name: newProductName,
+      price: newPrice,
+      vendor: newVendor,
+      category: newCategory,
+    });
+
+    if (success) {
+      toast.success("Product updated successfully");
+      setTriggerRefresh(true);
+    } else {
+      toast("Failed to update product");
+    }
+    setIsEditOpen(false);
     console.log("Edit clicked for product:", product.id);
   };
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    toast("One product deleted");
+    toast.success("One product deleted");
     const savedProducts = JSON.parse(localStorage.getItem("products") || "[]");
     const updatedProducts = savedProducts.filter(
       (p: Product) => p.id !== product.id
@@ -49,12 +106,69 @@ const ProductCard: React.FC<{
   return (
     <div className="flex flex-col justify-between max-h-[437px] shadow bg-white rounded-lg body relative">
       <div className="absolute top-2 right-2 flex space-x-1 z-20 p-2">
-        <button
-          onClick={handleEdit}
-          className="p-1 bg-white text-[#333333] hover:text-blue-400 rounded-full shadow"
-        >
-          <BiEditAlt />
-        </button>
+        <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+          <AlertDialogTrigger asChild>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsEditOpen(true);
+              }}
+              className="p-1 bg-white text-[#333333] hover:text-blue-400 rounded-full shadow"
+            >
+              <BiEditAlt />
+            </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+            <AlertDialogHeader>
+              <AlertDialogTitle className="py-2">Edit Product</AlertDialogTitle>
+
+              <h2 className="text-sm font-medium ">Product Name</h2>
+              <Input
+                value={newProductName}
+                onChange={(e) => setNewProductName(e.target.value)}
+              />
+            </AlertDialogHeader>
+            <AlertDialogDescription className="text-[#100909] font-medium ">
+              <p>Price </p>
+              <Input
+                value={newPrice}
+                onChange={(e) => setNewPrice(Number(e.target.value))}
+              />
+            </AlertDialogDescription>
+            <AlertDialogDescription className="text-[#100909] font-medium ">
+              <p>Vendor </p>
+              <Input
+                value={newVendor}
+                onChange={(e) => setNewVendor(e.target.value)}
+              />
+            </AlertDialogDescription>
+            <AlertDialogDescription className="text-[#100909] font-medium ">
+              <p>Category </p>
+              <Input
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+            </AlertDialogDescription>
+            <AlertDialogFooter>
+              <AlertDialogCancel
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                Cancel
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-green-800 hover:bg-green-500"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(e);
+                }}
+              >
+                Update
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
 
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <AlertDialogTrigger asChild>
