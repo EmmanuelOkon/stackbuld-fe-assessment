@@ -24,10 +24,7 @@ const TopSports: React.FC = () => {
     loadProducts();
   }, [triggerRefresh]);
 
-
-  const topDeals = products.filter(
-    (product) => product.category === "Sports"
-  );
+  const topDeals = products.filter((product) => product.category === "Sports");
 
   return (
     <>

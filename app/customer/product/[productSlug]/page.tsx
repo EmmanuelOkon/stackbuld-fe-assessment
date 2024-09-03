@@ -1,20 +1,39 @@
 "use client";
+import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 import { useParams } from "next/navigation";
 
-import { products, reviews } from "@/static";
+import { reviews } from "@/static";
 import ProductInfo from "@/components/ProductInfo";
 
 import VendorCard from "@/components/VendorCard";
 import RatingDistribution from "@/components/RatingDistribution";
 import ReviewCard from "@/components/ReviewCard";
 import ProductCard from "@/components/ProductCard";
-
+import { Product } from "@/interface";
 
 const ProductDetail = () => {
   const { productSlug } = useParams();
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const savedProducts = JSON.parse(
+          localStorage.getItem("products") || "[]"
+        ) as Product[];
+        setProducts(savedProducts);
+      } catch (error) {
+        console.error("Error loading products from localStorage:", error);
+        setProducts([]);
+      }
+    };
+
+    loadProducts();
+  }, [triggerRefresh]);
 
   const product = products.find(
     (p) => p.name.replace(/\s+/g, "-").toLowerCase() === productSlug
@@ -184,7 +203,11 @@ const ProductDetail = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {products.slice(0, 10).map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              setTriggerRefresh={setTriggerRefresh}
+            />
           ))}
         </div>
       </div>

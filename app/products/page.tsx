@@ -15,7 +15,6 @@ import { FaArrowDown } from "react-icons/fa6";
 import { CgUndo } from "react-icons/cg";
 import { Product } from "@/interface";
 
-
 type SortOption = "default" | "ascending" | "descending";
 
 const ProductsPage = () => {

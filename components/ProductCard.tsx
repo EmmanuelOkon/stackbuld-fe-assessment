@@ -24,34 +24,30 @@ export function editProductInLocalStorage(
   updatedFields: Partial<Product>
 ): boolean {
   try {
-    // Retrieve the current products from localStorage
     const savedProducts: Product[] = JSON.parse(
       localStorage.getItem("products") || "[]"
     );
 
-    // Find the index of the product to edit
     const productIndex = savedProducts.findIndex(
       (product) => product.id === id
     );
 
-    // If the product is not found, return false
     if (productIndex === -1) {
       console.error(`Product with id ${id} not found in localStorage`);
       return false;
     }
 
-    // Update the product with the new fields
     savedProducts[productIndex] = {
       ...savedProducts[productIndex],
       ...updatedFields,
     };
 
-    // Save the updated products back to localStorage
     localStorage.setItem("products", JSON.stringify(savedProducts));
 
     console.log(`Product with id ${id} updated successfully`);
     return true;
   } catch (error) {
+
     console.error("Error updating product in localStorage:", error);
     return false;
   }
@@ -82,7 +78,7 @@ const ProductCard: React.FC<{
       toast.success("Product updated successfully");
       setTriggerRefresh(true);
     } else {
-      toast("Failed to update product");
+      toast.error("Failed to update product");
     }
     setIsEditOpen(false);
     console.log("Edit clicked for product:", product.id);
@@ -104,11 +100,15 @@ const ProductCard: React.FC<{
   };
 
   return (
-    <div className="flex flex-col justify-between max-h-[437px] shadow bg-white rounded-lg body relative">
+    <div
+      data-testid="product-card"
+      className="flex flex-col justify-between max-h-[437px] shadow bg-white rounded-lg body relative"
+    >
       <div className="absolute top-2 right-2 flex space-x-1 z-20 p-2">
         <AlertDialog open={isEditOpen} onOpenChange={setIsEditOpen}>
           <AlertDialogTrigger asChild>
             <button
+              aria-label="edit"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsEditOpen(true);
@@ -123,29 +123,41 @@ const ProductCard: React.FC<{
               <AlertDialogTitle className="py-2">Edit Product</AlertDialogTitle>
             </AlertDialogHeader>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <h2 className="text-sm font-medium py-2">Product Name</h2>
+              <label htmlFor="productName" className="text-sm font-medium py-2">
+                Product Name
+              </label>
               <Input
+                aria-label="Product Name"
+                id="productName"
                 value={newProductName}
                 onChange={(e) => setNewProductName(e.target.value)}
               />
             </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <h2 className="text-sm font-medium py-2 ">Price(₦) </h2>
+              <label htmlFor="price" className="text-sm font-medium py-2 ">
+                Price(₦){" "}
+              </label>
               <Input
+                aria-label="Price"
+                id="price"
                 value={newPrice}
                 onChange={(e) => setNewPrice(Number(e.target.value))}
               />
             </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <h2 className="text-sm font-medium py-2">Vendor </h2>
+              <label className="text-sm font-medium py-2">Vendor </label>
               <Input
+                aria-label="Vendor"
+                id="vendor"
                 value={newVendor}
                 onChange={(e) => setNewVendor(e.target.value)}
               />
             </AlertDialogDescription>
             <AlertDialogDescription className="text-[#100909] font-medium ">
-              <h2 className="text-sm font-medium py-2">Category </h2>
+              <label className="text-sm font-medium py-2">Category </label>
               <Input
+                aria-label="Category"
+                id="category"
                 value={newCategory}
                 onChange={(e) => setNewCategory(e.target.value)}
               />
@@ -175,6 +187,7 @@ const ProductCard: React.FC<{
         <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <AlertDialogTrigger asChild>
             <button
+              aria-label="delete"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsDialogOpen(true);
@@ -205,6 +218,7 @@ const ProductCard: React.FC<{
                 Cancel
               </AlertDialogCancel>
               <AlertDialogAction
+                id="delete"
                 className="bg-red-800 hover:bg-red-500"
                 onClick={(e) => {
                   e.stopPropagation();
@@ -235,7 +249,10 @@ const ProductCard: React.FC<{
           )}
         </div>
         <div className="p-4">
-          <h3 className="text-lg font-semibold text-gray-800">
+          <h3
+            data-testid="product-card"
+            className="text-lg font-semibold text-gray-800"
+          >
             {product.name}
           </h3>
           <p className="text-gray-600">₦{product.price.toLocaleString()}</p>

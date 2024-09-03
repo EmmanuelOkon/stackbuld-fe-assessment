@@ -12,7 +12,10 @@ const VendorInfo: React.FC<VendorInfoProps> = ({
   description,
 }) => {
   return (
-    <div className="bg-white p-6 rounded-b-[20px] shadow-md max-w-md mx-auto body">
+    <div
+      data-testid="vendor-info"
+      className="bg-white p-6 rounded-b-[20px] shadow-md max-w-md mx-auto body"
+    >
       <h2 className="text-xl body font-semibold text-[#333333]">{name}</h2>
       <p className="text-[16px] body ">Laptop & Tablet</p>
       <div className="flex items-center justify-between body">

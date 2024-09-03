@@ -1,23 +1,41 @@
 "use client";
 
+import * as React from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
-import { products, reviews, vendors } from "@/static";
+import { reviews, vendors } from "@/static";
 
 import RatingDistribution from "@/components/RatingDistribution";
 import ReviewCard from "@/components/ReviewCard";
 
-import VendorProductCard from "@/components/VendorProductCard";
 import VendorInfo from "@/components/VendorInfo";
 import ProductCard from "@/components/ProductCard";
-
+import { Product } from "@/interface";
 
 const VendorDetails = () => {
-  const { vendorSlug: vendorSLug } = useParams();
+  const { vendorSlug } = useParams();
+  const [products, setProducts] = React.useState<Product[]>([]);
+  const [triggerRefresh, setTriggerRefresh] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    const loadProducts = () => {
+      try {
+        const savedProducts = JSON.parse(
+          localStorage.getItem("products") || "[]"
+        ) as Product[];
+        setProducts(savedProducts);
+      } catch (error) {
+        console.error("Error loading products from localStorage:", error);
+        setProducts([]);
+      }
+    };
+
+    loadProducts();
+  }, [triggerRefresh]);
   const vendor = vendors.find(
-    (p) => p.name.replace(/\s+/g, "-").toLowerCase() === vendorSLug
+    (p) => p.name.replace(/\s+/g, "-").toLowerCase() === vendorSlug
   );
 
   const vendorProducts = vendor
@@ -39,9 +57,12 @@ const VendorDetails = () => {
   const averageRating = 4.5;
 
   return (
-    <div className="wrapper pt-10">
+    <div className="wrapper pt-10" data-testid="vendor-info">
       <div className="flex flex-col lg:flex-row items-start justify-between gap-6  ">
-        <div className="bgwhite  flex flex-col w-full max-w-[395px] rounded-[20px]">
+        <div
+          data-testid="vendor-info"
+          className="  flex flex-col w-full max-w-[395px] rounded-[20px]"
+        >
           {vendor.avatarUrl && (
             <Image
               width={1000}
@@ -67,13 +88,20 @@ const VendorDetails = () => {
             <h2 className="text-base lg:text-2xl font-bold text-gray-800">
               Products from {vendor.name}
             </h2>
-            <Link href="/products">Other products</Link>
+            <Link href="/products" className="hover:underline hover:text-purple-600">Other products</Link>
           </div>
           <div className="gap-6 flex flex-col">
             <div className=" rounded-[15px] ">
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4"
+                data-testid="product-card"
+              >
                 {vendorProducts.slice(0, 8).map((vendor) => (
-                  <VendorProductCard key={vendor.id} product={vendor} />
+                  <ProductCard
+                    key={vendor.id}
+                    product={vendor}
+                    setTriggerRefresh={setTriggerRefresh}
+                  />
                 ))}
               </div>
             </div>
@@ -115,7 +143,11 @@ const VendorDetails = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {vendorProducts.slice(8).map((vendor) => (
-            <VendorProductCard key={vendor.id} product={vendor} />
+            <ProductCard
+              key={vendor.id}
+              product={vendor}
+              setTriggerRefresh={setTriggerRefresh}
+            />
           ))}
         </div>
       </div>

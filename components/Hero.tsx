@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 
-const Hero = () => {
+export function Hero() {
   return (
     <div className="bg-whit">
       <div className="max-w-[76rem] mx-auto py-10 flex items-center flex-col md:flex-row justify-between px4 lg:px16 px-4 ">
@@ -29,4 +29,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+
