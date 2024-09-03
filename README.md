@@ -14,7 +14,7 @@
   <h3 align="center">Stackbuld e-Commerce Platform</h3>
 
    <div align="center">
-     This project was built using NextJS, Typescript, and Tailwind CSS. Other libraries used are Shadcn, React Icons and Lucide React. This app is deployed on <a href="https://vercel.com/"> Vercel</a> and can be visited <a href="https://stackbuld-fe-assessment.vercel.app/" >here.</a>
+     This project was built using NextJS, Typescript, and Tailwind CSS. Other libraries used are <a href="https://ui.shadcn.com/">Shadcn</a>, <a href="https://react-icons.github.io/react-icons/">React Icons</a> and <a href="https://lucide.dev/guide/packages/lucide-react">Lucide React.</a> This app is deployed on <a href="https://vercel.com/"> Vercel</a> and can be visited <a href="https://stackbuld-fe-assessment.vercel.app/" >here.</a>
     </div>
 </div>
 
